@@ -9,8 +9,8 @@ Route::get('/', function () {
     return view('dashboard');
 });
 
-Route::get('/penjualan', [PenjualanController::class, 'index']);
-Route::post('/penjualan', [PenjualanController::class, 'store']);
+Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
+Route::post('/penjualan', [PenjualanController::class, 'store'])->name('penjualan.store');
 
 Route::prefix('master')->name('master.')->group(function () {
     Route::get('/barang', [MasterController::class, 'barang'])->name('barang');
