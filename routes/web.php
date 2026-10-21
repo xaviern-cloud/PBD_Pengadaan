@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PenjualanController;
+
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
-
-use App\Http\Controllers\PenjualanController;
 
 Route::get('/penjualan', [PenjualanController::class, 'index']);
 Route::post('/penjualan', [PenjualanController::class, 'store']);

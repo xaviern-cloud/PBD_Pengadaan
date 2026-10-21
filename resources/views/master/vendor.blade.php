@@ -35,5 +35,8 @@
             </tbody>
         </table>
     </div>
+    <a href="/">
+        <button type="button">Dashboard</button>
+    </a>
 </body>
 </html>
