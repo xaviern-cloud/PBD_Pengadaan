@@ -13,7 +13,7 @@ class MarginPenjualanSeeder extends Seeder
                 'id_margin_penjualan' => 1,
                 'created_at'          => now(),
                 'persen'              => 10.0, // Margin 10%
-                'STATUS'              => 'A',
+                'STATUS'              => 1,
                 'updated_at'          => now(),
                 'id_user'             => 1, // Created by admin
             ],
@@ -21,7 +21,7 @@ class MarginPenjualanSeeder extends Seeder
                 'id_margin_penjualan' => 2,
                 'created_at'          => now(),
                 'persen'              => 15.0, // Margin 15%
-                'STATUS'              => 'A',
+                'STATUS'              => 1,
                 'updated_at'          => now(),
                 'id_user'             => 1,
             ],

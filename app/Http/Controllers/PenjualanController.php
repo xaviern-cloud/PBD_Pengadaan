@@ -61,5 +61,9 @@ class PenjualanController extends Controller
         $margins = MarginPenjualan::where('STATUS', 'A')->get();
 
         return view('penjualan.index', compact('barangs', 'margins'));
+
+        $barang = BarangView::all();
+        return view('penjualan.index', compact('barang'));
+
     }
 }
