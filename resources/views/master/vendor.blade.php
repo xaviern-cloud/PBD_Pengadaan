@@ -25,7 +25,11 @@
                         <td>{{ $v->id_vendor }}</td>
                         <td>{{ $v->nama_vendor }}</td>
                         <td>{{ $v->badan_hukum }}</td>
-                        <td>{{ $v->status }}</td>
+                        <td>@if($v->status == 1)
+                                <span class="badge bg-success">Aktif</span>
+                            @else
+                                <span class="badge bg-secondary">Non-Aktif</span>
+                            @endif</td>
                     </tr>
                 @empty
                     <tr>

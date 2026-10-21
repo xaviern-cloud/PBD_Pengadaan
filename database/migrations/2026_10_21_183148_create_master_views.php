@@ -21,7 +21,28 @@ return new class extends Migration
             LEFT JOIN satuan s ON b.id_satuan = s.id_satuan
         ");
 
-        // 2. View User
+        // 2. View Satuan (Tambahan Terpisah)
+        DB::statement("
+            CREATE OR REPLACE VIEW v_satuan AS
+            SELECT
+                id_satuan,
+                nama_satuan,
+                status
+            FROM satuan
+        ");
+
+        // 3. View Vendor
+        DB::statement("
+            CREATE OR REPLACE VIEW v_vendor AS
+            SELECT
+                id_vendor,
+                nama_vendor,
+                badan_hukum,
+                status
+            FROM vendor
+        ");
+
+        // 4. View User
         DB::statement("
             CREATE OR REPLACE VIEW v_user AS
             SELECT
@@ -32,7 +53,16 @@ return new class extends Migration
             LEFT JOIN role r ON u.id_role = r.id_role
         ");
 
-        // 3. View Margin Penjualan
+        // 5. View Role (Tambahan Terpisah)
+        DB::statement("
+            CREATE OR REPLACE VIEW v_role AS
+            SELECT
+                id_role,
+                nama_role
+            FROM role
+        ");
+
+        // 6. View Margin Penjualan
         DB::statement("
             CREATE OR REPLACE VIEW v_margin_penjualan AS
             SELECT
@@ -45,24 +75,15 @@ return new class extends Migration
             FROM margin_penjualan m
             LEFT JOIN user u ON m.id_user = u.id_user
         ");
-
-        // 4. View Vendor
-        DB::statement("
-            CREATE OR REPLACE VIEW v_vendor AS
-            SELECT
-                id_vendor,
-                nama_vendor,
-                badan_hukum,
-                status
-            FROM vendor
-        ");
     }
 
     public function down(): void
     {
         DB::statement("DROP VIEW IF EXISTS v_barang");
-        DB::statement("DROP VIEW IF EXISTS v_user");
-        DB::statement("DROP VIEW IF EXISTS v_margin_penjualan");
+        DB::statement("DROP VIEW IF EXISTS v_satuan");
         DB::statement("DROP VIEW IF EXISTS v_vendor");
+        DB::statement("DROP VIEW IF EXISTS v_user");
+        DB::statement("DROP VIEW IF EXISTS v_role");
+        DB::statement("DROP VIEW IF EXISTS v_margin_penjualan");
     }
 };

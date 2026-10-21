@@ -32,9 +32,9 @@
                         <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                         <td>
                             @if($item->status == 1)
-                                <span class="badge bg-success">Aktif</span>
+                                <span class="badge bg-success">Tersedia</span>
                             @else
-                                <span class="badge bg-secondary">Non-Aktif</span>
+                                <span class="badge bg-secondary">Kosong</span>
                             @endif
                         </td>
                     </tr>

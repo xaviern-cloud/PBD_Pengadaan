@@ -20,5 +20,14 @@
     <a href="/master/barang">
         <button type="button">View Master Barang</button>
     </a>
+    <a href="/master/satuan">
+        <button type="button">View Master Satuan</button>
+    </a>
+    <a href="/master/role">
+        <button type="button">View Master Role</button>
+    </a>
+    <a href="/penjualan">
+        <button type="button">Halaman Store</button>
+    </a>
 </body>
 </html>
