@@ -27,11 +27,7 @@
                     <tr>
                         <td>{{ $item->id_margin_penjualan}}</td>
                         <td>{{ $item->persen}}</td>
-                        <td>@if($item->status == 1)
-                                <span class="badge bg-success">Aktif</span>
-                            @else
-                                <span class="badge bg-secondary">Non-Aktif</span>
-                            @endif</td>
+                        <td>{{ $item->Status}}</td>
                         <td>{{ $item->dibuat_oleh}}</td>
                         <td>{{ $item->created_at}}</td>
                         <td>{{ $item->updated_at}}</td>

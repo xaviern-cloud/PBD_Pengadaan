@@ -15,9 +15,13 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-cart4 me-2"></i>ERP Penjualan</a>
+
+            <a class="navbar-brand fw-bold" href="/"><i class="bi bi-cart4 me-2"></i>ERP Penjualan</a>
+
             <div class="text-white me-3">
-                <i class="bi bi-person-circle me-1"></i> User: <strong>{{ auth()->user()->username ?? 'Kasir' }}</strong>
+
+                <button><i class="bi bi-person-circle me-1"></i> User: <strong>{{ auth()->user()->username ?? 'Kasir' }}</strong></button>
+
             </div>
         </div>
     </nav>
@@ -115,8 +119,5 @@
             </div>
         </div>
     </div>
-
-    <!-- JS External -->
-
 </body>
 </html>

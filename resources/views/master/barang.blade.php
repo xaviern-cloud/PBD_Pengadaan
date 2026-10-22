@@ -25,18 +25,12 @@
             <tbody>
                 @forelse($barang as $item)
                     <tr>
-                        <td>{{ $item->id_barang ?? $item->idbarang }}</td>
+                        <td>{{ $item->id_barang}}</td>
                         <td>{{ $item->nama_barang }}</td>
-                        <td>{{ $item->jenis ?? $item->jenis_barang }}</td>
-                        <td><span class="badge bg-info text-dark">{{ $item->nama_satuan }}</span></td>
+                        <td>{{ $item->jenis_barang }}</td>
+                        <td>{{ $item->nama_satuan }}</td>
                         <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                        <td>
-                            @if($item->status == 1)
-                                <span class="badge bg-success">Tersedia</span>
-                            @else
-                                <span class="badge bg-secondary">Kosong</span>
-                            @endif
-                        </td>
+                        <td>{{ $item->Status }}</td>
                     </tr>
                 @empty
                     <tr>

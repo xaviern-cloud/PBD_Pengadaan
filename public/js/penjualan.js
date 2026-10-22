@@ -89,7 +89,7 @@ function calculateTotal() {
 
 function submitTransaction() {
     if (cart.length === 0) {
-        alert('Keranjang belanja masih kosong!');
+        alert('Kaseranjang belanja masih kosong!');
         return;
     }
 

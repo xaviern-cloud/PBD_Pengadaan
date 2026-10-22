@@ -22,13 +22,9 @@
             <tbody>
                 @forelse($satuan as $satuan)
                     <tr>
-                        <td>{{ $satuan->id_satuan}}</td>
-                        <td>{{ $satuan->nama_satuan}}</td>
-                        <td>@if($satuan->status == 1)
-                                <span class="badge bg-success">Aktif</span>
-                            @else
-                                <span class="badge bg-secondary">Non-Aktif</span>
-                            @endif</td>
+                        <td>{{$satuan->id_satuan}}</td>
+                        <td>{{$satuan->nama_satuan}}</td>
+                        <td>{{$satuan->Status}}</td>
                     </tr>
                 @empty
                     <tr>

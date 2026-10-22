@@ -34,7 +34,7 @@ return new class extends Migration
         // 4. Barang
         Schema::create('barang', function (Blueprint $table) {
             $table->increments('id_barang');
-            $table->char('jenis_barang', 1)->nullable();
+            $table->char('jenis_barang', 3)->nullable();
             $table->string('nama_barang', 45);
             $table->unsignedInteger('id_satuan')->nullable();
             $table->tinyInteger('status')->default(1);
@@ -47,7 +47,7 @@ return new class extends Migration
         Schema::create('vendor', function (Blueprint $table) {
             $table->increments('id_vendor');
             $table->string('nama_vendor', 100);
-            $table->char('badan_hukum', 1)->nullable();
+            $table->char('badan_hukum', 2)->nullable();
             $table->char('status', 1)->default('1');
         });
 
