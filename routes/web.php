@@ -19,4 +19,5 @@ Route::prefix('master')->name('master.')->group(function () {
     Route::get('/user', [MasterController::class, 'user'])->name('user');
     Route::get('/role', [MasterController::class, 'role'])->name('role');
     Route::get('/margin', [MasterController::class, 'margin'])->name('margin');
+    Route::get('/gabungan', [MasterController::class, 'gabungan'])->name('gabungan');
 });

@@ -1,0 +1,137 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: linear-gradient(black, grey);
+    color: white;
+    min-height: 100vh;
+}
+
+.container-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 24px;
+    gap: 24px;
+}
+
+.container-big {
+    display: grid;
+    justify-content: top;
+    align-items: start;
+    flex-direction: row;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 24px;
+    gap: 24px;
+
+}
+
+h1, h2, h3 {
+    background-color: azure;
+    color: black;
+    font-size: 32px;
+    border-radius: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
+    font-weight:bold;
+    text-align: center;
+
+}
+
+.container-second {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    width: 100%;
+}
+.button-master-view {
+    background-color: blue;
+    width: fit-content;
+    height: 36px;
+    padding-left: 16px;
+    padding-right: 16px;
+    align-items: center;
+    justify-content: center;
+    margin:auto;
+    border-radius: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.button-penjualan {
+    background: rgba(255, 0, 0, 0.7);
+    box-shadow: 0 4px 24px rgba(255, 0, 0, 0.7);
+    width: fit-content;
+    height: 36px;
+    padding-left: 16px;
+    padding-right: 16px;
+    align-items: center;
+    justify-content: center;
+    margin:auto;
+    border-radius: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    backdrop-filter: blur(12px);
+}
+
+.tabel-vendor{
+    border-collapse: separate;
+    border-spacing: 20px 10px;
+    margin: auto;
+}
+
+.tabel-vendor td, .tabel-vendor th {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px 20px;
+    border-radius: 12px;
+}
+.status-aktif, .status-aktif{
+    background: rgba(30, 255, 0, 0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px 20px;
+    border-radius: 12px;
+}
+.status-nonaktif, .status-nonaktif {
+    background: rgba(255, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px 20px; /* Menambah ruang di dalam sel */
+    border-radius: 12px;
+}
+
+.bahan-baku{
+    background: rgba(255, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px 20px; /* Menambah ruang di dalam sel */
+    border-radius: 12px;
+}

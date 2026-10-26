@@ -3,40 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>Master Data Vendor</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-light p-4">
-    <div class="container bg-white p-4 rounded shadow-sm">
-        <h3 class="mb-4">Data Master Vendor</h3>
 
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
+<body>
+    <div class="container-main">
+        <h3>Data Master Vendor</h3>
+        <table class="tabel-vendor">
+            <div>
+                    <label for="filterStatus">
+                        <i> Filter Status </i>
+                    </label>
+                        <select name="status" id="filterStatus" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                                    <option value="All" {{ ($Status ?? 'All') == 'All' ? 'selected' : '' }}>-- Semua Status --</option>
+                                    <option value="Aktif" {{ ($Status ?? '') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="Non-Aktif" {{ ($Status ?? '') == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
+                                </select>
+                        </div>
+                    </form>
+            <thead>
                 <tr>
-                    <th>ID Vendor</th>
-                    <th>Nama Vendor</th>
-                    <th>Badan Hukum</th>
-                    <th>Status</th>
+                    <th>ID VENDOR</th>
+                    <th>NAMA VENDOR</th>
+                    <th>BADAN HUKUM</th>
+                    <th>STATUS</th>
                 </tr>
             </thead>
+
             <tbody>
                 @forelse($vendor as $v)
-                    <tr>
-                        <td>{{ $v->id_vendor }}</td>
-                        <td>{{ $v->nama_vendor }}</td>
-                        <td>{{ $v->badan_hukum }}</td>
-                        <td>{{ $v->Status}}</td>
+                    <tr class="{{ $v->Status == 'AKTIF' ? 'status-aktif' : 'status-nonaktif'}}">
+                            <td>{{ $v->id_vendor }}</td>
+                            <td>{{ $v->nama_vendor }}</td>
+                            <td>{{ $v->badan_hukum }}</td>
+                            <td>{{ $v->Status}}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center">Data vendor kosong</td>
+                        <td>Data vendor kosong</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-    </div>
-    <a href="/">
-        <button type="button">Dashboard</button>
+
+        <a href="/">
+        <button class=button-penjualan type="button">Dashboard</button>
     </a>
+    </div>
+
 </body>
 </html>

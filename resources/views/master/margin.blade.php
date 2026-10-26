@@ -2,17 +2,15 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Data Margin</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-light p-4">
-    <div class="container bg-white p-4 rounded shadow-sm">
-        <h3 class="mb-4">Data Master Margin</h3>
-
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
+<body>
+    <div class="container-main">
+        <h3>Data Master Margin</h3>
+        <table class="tabel-vendor">
+            <thead>
                 <tr>
                     <th>ID</th>
                     <th>Persentase</th>
@@ -22,11 +20,12 @@
                     <th>Diupdate Pada</th>
                 </tr>
             </thead>
+
             <tbody>
                 @forelse($margin as $item)
-                    <tr>
+                    <tr class="{{ $item->Status == 'AKTIF' ? 'status-aktif' : 'status-nonaktif'}}">
                         <td>{{ $item->id_margin_penjualan}}</td>
-                        <td>{{ $item->persen}}</td>
+                        <td>{{ $item->persen}} %</td>
                         <td>{{ $item->Status}}</td>
                         <td>{{ $item->dibuat_oleh}}</td>
                         <td>{{ $item->created_at}}</td>
@@ -34,14 +33,17 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">Data Margin kosong</td>
+                        <td>Data Margin kosong</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-    </div>
+
+
     <a href="/">
-        <button type="button">Dashboard</button>
+        <button class='button-penjualan' type="button">Dashboard</button>
     </a>
+
+    </div>
 </body>
 </html>

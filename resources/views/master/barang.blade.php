@@ -4,15 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Data Barang</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href=app.css>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-light p-4">
-    <div class="container bg-white p-4 rounded shadow-sm">
-        <h3 class="mb-4">Data Master Barang</h3>
+<body>
+    <div class=container-main>
+        <h3>Data Master Barang</h3>
+            <form method="GET" action="{{ route('master.barang') }}" id="filterForm">
+                <div>
+                    <label for="filterStatus">
+                        <i> Filter Status </i>
+                    </label>
+                        <select name="status" id="filterStatus" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                                    <option value="All" {{ ($status ?? 'All') == 'All' ? 'selected' : '' }}>-- Semua Status --</option>
+                                    <option value="Aktif" {{ ($status ?? '') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="Non-Aktif" {{ ($status ?? '') == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
+                                </select>
+                        </div>
+                    </form>
 
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
+
+        <table class=tabel-vendor>
+            <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nama Barang</th>
@@ -22,9 +35,10 @@
                     <th>Status</th>
                 </tr>
             </thead>
+
             <tbody>
                 @forelse($barang as $item)
-                    <tr>
+                    <tr class= "{{ $item->Status == 'Aktif' ? 'status-aktif' : 'status-nonaktif'}}">
                         <td>{{ $item->id_barang}}</td>
                         <td>{{ $item->nama_barang }}</td>
                         <td>{{ $item->jenis_barang }}</td>
@@ -34,14 +48,15 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">Data barang kosong</td>
+                        <td>Data barang kosong</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-    </div>
-    <a href="/">
-        <button type="button">Dashboard</button>
+        <a href="/">
+        <button class=button-penjualan type="button">Dashboard</button>
     </a>
+    </div>
+
 </body>
 </html>
