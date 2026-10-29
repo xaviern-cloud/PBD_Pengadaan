@@ -38,7 +38,7 @@ return new class extends Migration
                 nama_satuan,
                 CASE
                     WHEN status ='1' THEN 'AKTIF'
-                    WHEN status ='2' THEN 'NON-Aktif'
+                    WHEN status ='2' THEN 'NON-AKTIF'
                     else 'Status Belum Diberikan'
                 END as Status
             FROM satuan

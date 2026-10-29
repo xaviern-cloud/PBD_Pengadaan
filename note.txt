@@ -1,0 +1,6 @@
+membuat table counter barang
+membuat table log barang
+
+select coalesce(max(counterterakhir))
+atau
+pakai casting untuk mengubah string menjadi integer

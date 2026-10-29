@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BarangView;
 use App\Models\SatuanView;
+use App\Models\Vendor;
 use App\Models\VendorView;
 use App\Models\UserView;
 use App\Models\RoleView;
@@ -43,7 +44,7 @@ class MasterController extends Controller
     // 3. Filter Master Vendor
     public function vendor(Request $request)
     {
-        $Status = $request->get('status', 'All');
+        $Status = $request->get('Status', 'All');
         $query = VendorView::query();
 
         if ($Status && $Status !== 'All') {
@@ -52,6 +53,48 @@ class MasterController extends Controller
 
         $vendor = $query->get();
         return view('master.vendor', compact('vendor', 'Status'));
+    }
+
+    public function storeVendor(Request $request)
+    {
+        $request->validate([
+            'nama_vendor' => 'required|string|max:255',
+            'badan_hukum' => 'required|in:P,C,U', // P = PT, C = CV, U = UD
+        ]);
+
+        Vendor::create([
+            'nama_vendor' => $request->nama_vendor,
+            'badan_hukum' => $request->badan_hukum,
+            'status'      => 'A', // Default Aktif ('A' atau '1')
+        ]);
+
+        return redirect()->back()->with('success', 'Vendor berhasil ditambahkan!');
+    }
+
+    // Edit Vendor
+    public function updateVendor(Request $request, $id)
+    {
+        $request->validate([
+            'nama_vendor' => 'required|string|max:255',
+            'badan_hukum' => 'required|in:P,C,U',
+            'status'      => 'required|in:A,N', // A = Aktif, N = Non-Aktif
+        ]);
+
+        $vendor = Vendor::findOrFail($id);
+        $vendor->update([
+            'nama_vendor' => $request->nama_vendor,
+            'badan_hukum' => $request->badan_hukum,
+            'status'      => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Data vendor berhasil diperbarui!');
+    }
+
+    // Hapus Vendor
+    public function destroyVendor($id)
+    {
+        Vendor::destroy($id);
+        return redirect()->back()->with('success', 'Vendor berhasil dihapus!');
     }
 
     // 4. Filter Master Margin
@@ -79,6 +122,7 @@ class MasterController extends Controller
         $role = RoleView::all();
         return view('master.role', compact('role'));
     }
+
     public function gabungan()
     {
         $barang = BarangView::all();

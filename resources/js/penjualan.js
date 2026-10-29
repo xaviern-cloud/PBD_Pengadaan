@@ -126,3 +126,36 @@ function submitTransaction() {
         alert('Gagal menyimpan transaksi!');
     });
 }
+
+/**
+ * Membuka Modal Edit dan mengisi data Vendor ke dalam Form
+ */
+function editVendor(id, nama, badanHukum, status) {
+    // 1. Ubah Action URL Form Edit
+    const formEdit = document.getElementById('formEditVendor');
+    formEdit.action = `/master/vendor/${id}`;
+
+    // 2. Isi Input Nama Vendor
+    document.getElementById('edit_nama_vendor').value = nama;
+
+    // 3. Mapping Badan Hukum (PT -> P, CV -> C, UD -> U) untuk input select form
+    let bhCode = 'P';
+    if (badanHukum === 'CV') bhCode = 'C';
+    else if (badanHukum === 'UD') bhCode = 'U';
+    document.getElementById('edit_badan_hukum').value = bhCode;
+
+    // 4. Mapping Status (Aktif -> A, Non-Aktif -> N) untuk input select form
+    let statusCode = (status === 'Aktif') ? 'A' : 'N';
+    document.getElementById('edit_status').value = statusCode;
+
+    // 5. Tampilkan Modal Edit Bootstrap
+    const modalEdit = new bootstrap.Modal(document.getElementById('modalEditVendor'));
+    modalEdit.show();
+}
+
+/**
+ * Konfirmasi sebelum menghapus vendor
+ */
+function confirmDelete(namaVendor) {
+    return confirm(`Apakah Anda yakin ingin menghapus vendor "${namaVendor}"?`);
+}

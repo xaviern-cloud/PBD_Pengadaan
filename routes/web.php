@@ -14,8 +14,14 @@ Route::post('/penjualan', [PenjualanController::class, 'store'])->name('penjuala
 
 Route::prefix('master')->name('master.')->group(function () {
     Route::get('/barang', [MasterController::class, 'barang'])->name('barang');
+    
     Route::get('/satuan', [MasterController::class, 'satuan'])->name('satuan');
+    
     Route::get('/vendor', [MasterController::class, 'vendor'])->name('vendor');
+    Route::post('/vendor', [MasterController::class, 'storeVendor'])->name('vendor.store');
+    Route::put('/vendor/{id}', [MasterController::class, 'updateVendor'])->name('vendor.update');
+    Route::delete('/vendor/{id}', [MasterController::class, 'destroyVendor'])->name('vendor.destroy');
+    
     Route::get('/user', [MasterController::class, 'user'])->name('user');
     Route::get('/role', [MasterController::class, 'role'])->name('role');
     Route::get('/margin', [MasterController::class, 'margin'])->name('margin');
