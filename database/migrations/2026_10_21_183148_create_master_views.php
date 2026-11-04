@@ -26,7 +26,7 @@ return new class extends Migration
                     WHEN b.status ='1' THEN 'Aktif'
                     WHEN b.status ='2' THEN 'Non-Aktif'
                     else 'Status Belum Diberikan'
-                END as Status
+                END as status
             FROM barang b
             LEFT JOIN satuan s ON b.id_satuan = s.id_satuan
         ");

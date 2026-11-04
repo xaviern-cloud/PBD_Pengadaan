@@ -31,9 +31,9 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1);
         });
 
-        // 4. Barang
+        // 4. Barang (Primary Key String Custom ID: BB-001)
         Schema::create('barang', function (Blueprint $table) {
-            $table->string('id_barang')->primary();
+            $table->string('id_barang', 20)->primary();
             $table->char('jenis_barang', 3);
             $table->string('nama_barang', 45);
             $table->unsignedInteger('id_satuan')->nullable();
@@ -83,7 +83,7 @@ return new class extends Migration
             $table->integer('harga_satuan')->nullable();
             $table->integer('jumlah')->nullable();
             $table->integer('sub_total')->nullable();
-            $table->unsignedInteger('id_barang');
+            $table->string('id_barang', 20); // Disesuaikan ke String (VARCHAR)
             $table->unsignedBigInteger('id_pengadaan');
 
             $table->foreign('id_barang')->references('id_barang')->on('barang')->onDelete('cascade');
@@ -106,7 +106,7 @@ return new class extends Migration
         Schema::create('detail_penerimaan', function (Blueprint $table) {
             $table->bigIncrements('id_detail_penerimaan');
             $table->unsignedBigInteger('id_penerimaan');
-            $table->unsignedInteger('barang_id_barang');
+            $table->string('barang_id_barang', 20); // Disesuaikan ke String (VARCHAR)
             $table->integer('jumlah_terima')->nullable();
             $table->integer('harga_satuan_terima')->nullable();
             $table->integer('sub_total_terima')->nullable();
@@ -159,7 +159,7 @@ return new class extends Migration
             $table->integer('jumlah')->nullable();
             $table->integer('subtotal')->nullable();
             $table->unsignedInteger('penjualan_id_penjualan');
-            $table->unsignedInteger('id_barang');
+            $table->string('id_barang', 20); // Disesuaikan ke String (VARCHAR)
 
             $table->foreign('penjualan_id_penjualan')->references('id_penjualan')->on('penjualan')->onDelete('cascade');
             $table->foreign('id_barang')->references('id_barang')->on('barang')->onDelete('cascade');
@@ -174,7 +174,7 @@ return new class extends Migration
             $table->integer('stock')->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->integer('id_transaksi')->nullable();
-            $table->unsignedInteger('id_barang');
+            $table->string('id_barang', 20); // Disesuaikan ke String (VARCHAR)
 
             $table->foreign('id_barang')->references('id_barang')->on('barang')->onDelete('cascade');
         });
