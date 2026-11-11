@@ -4,40 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="app.css">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
-    <div class=container-main>
-        <h1>Dashboard</h1>
+    <div class="top-nav">
+        <a href="/master/barang" class="nav-link">Master Barang</a>
+        <a href="/master/satuan" class="nav-link">Master Satuan</a>
+        <a href="/master/vendor" class="nav-link">Master Vendor</a>
+        <a href="/master/user" class="nav-link">Master User</a>
+        <a href="/master/margin" class="nav-link">Master Margin</a>
+        <a href="/master/role" class="nav-link">Master Role</a>
+        <a href='/profile' class="nav-link">Profile</a>
+    </div>
+    <div class="main-wrapper">
+        <div class="main-container-text">
+            <div>
+                <h1>Selamat Datang, pengguna</h1>
+                <p>Silakan pilih menu di atas atau lakukan transaksi melalui tombol di bawah.</p>
+            </div>
+            <a href="/penjualan" class="btn-pembelian">Lakukan Pembelian</a>
+        </div>
 
-        <div class=container-second>
-            <a href="/master/vendor">
-                <button class=button-master-view  type="button">View Master Vendor</button>
-            </a>
-            <a href="/master/user">
-                <button class=button-master-view type="button">View Master User</button>
-            </a>
-            <a href="/master/margin">
-                <button class=button-master-view type="button">View Master Margin</button>
-            </a>
-            <a href="/master/barang">
-                <button class=button-master-view  type="button">View Master Barang</button>
-            </a>
-            <a href="/master/satuan">
-                <button class=button-master-view  type="button">View Master Satuan</button>
-            </a>
-            <a href="/master/role">
-                <button class=button-master-view type="button">View Master Role</button>
-            </a>
-            <a href="/penjualan">
-                <button class=button-penjualan type="button">Halaman Store</button>
-            </a>
-            <a href="/master/gabungan">
-                <button class=button-master-view type="button">View Master Gabungan</button>
+        <div class="main-container-model">
+            <model-viewer
+                src="{{ asset('models/anemone_flower_low_poly.glb') }}"
+                alt="A 3D model"
+                auto-rotate
+                camera-controls
+                touch-action="pan-y"
+                shadow-intensity="1">
+            </model-viewer>
         </div>
     </div>
-</body>
+    <div class=main-wrapper>
+        <div class="katalog">
+            <h1>Katalog Barang</h1>
+        </div>
+    </div>
 
+
+</body>
 </html>

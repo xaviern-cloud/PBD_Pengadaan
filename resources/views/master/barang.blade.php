@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Barang - ERP Pengadaan & Penjualan</title>
+    <title>Master Barang - ERP</title>
     <link rel="stylesheet" href="{{ asset('css/barang.css') }}">
 </head>
 <body>
@@ -11,15 +11,13 @@
         <h1>Master Data Barang</h1>
 
         @if(session('success'))
-            <div class="alert-success">
-                {{ session('success') }}
-            </div>
+            <div class="alert-success">{{ session('success') }}</div>
         @endif
 
-        <button class="button-tambah-vendor" onclick="openModal('modalTambahBarang')">+ Tambah Barang</button>
+        <button class="button-tambah" onclick="openModal('modalTambahBarang')">+ Tambah Barang</button>
 
         <div style="overflow-x: auto; width: 100%;">
-            <table class="tabel-vendor">
+            <table class="tabel-custom">
                 <thead>
                     <tr>
                         <th>ID BARANG</th>
@@ -31,7 +29,7 @@
                             STATUS
                             <form method="GET" action="{{ route('master.barang') }}" style="display: inline-block; margin-left: 8px;">
                                 <select name="status" class="dropdown-status" onchange="this.form.submit()">
-                                    <option value="All" {{ ($status ?? 'All') == 'All' ? 'selected' : '' }}>Semua</option>
+                                    <option value="All" {{ ($status ?? 'All') == 'All' ? 'selected' : '' }}>-- Semua --</option>
                                     <option value="Aktif" {{ ($status ?? '') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
                                     <option value="Non-Aktif" {{ ($status ?? '') == 'Non-Aktif' ? 'selected' : '' }}>Non-Aktif</option>
                                 </select>
@@ -49,7 +47,6 @@
                         <td>{{ $b->nama_satuan }}</td>
                         <td>Rp {{ number_format($b->harga, 0, ',', '.') }}</td>
                         <td>
-                            <!-- Null-safety operator untuk mencegah error Undefined property $status -->
                             <span class="{{ ($b->status ?? '') == 'Aktif' ? 'status-aktif' : 'status-nonaktif' }}">
                                 {{ $b->status ?? 'Non-Aktif' }}
                             </span>
@@ -60,7 +57,6 @@
                                         onclick="editBarang('{{ $b->id_barang }}', '{{ $b->jenis_barang }}', '{{ addslashes($b->nama_barang) }}', '{{ $b->id_satuan ?? '' }}', '{{ $b->harga }}', '{{ $b->status ?? '' }}')">
                                     Edit
                                 </button>
-
                                 <form action="{{ route('master.barang.destroy', $b->id_barang) }}" method="POST" style="display: inline;" onsubmit="return confirmDelete('{{ $b->nama_barang }}')">
                                     @csrf
                                     @method('DELETE')
@@ -71,25 +67,21 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" style="text-align: center; color: #fff; padding: 20px;">Data barang tidak ditemukan.</td>
+                        <td colspan="7" style="text-align: center; padding: 20px;">Data barang kosong.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-
-        <a href="/">
-        <button class=button-penjualan type="button">Dashboard</button>
-        </a>
     </div>
 
-    <!-- MODAL TAMBAH BARANG -->
+    <!-- Modal Tambah -->
     <div class="modal-overlay" id="modalTambahBarang">
         <div class="modal-box">
             <form action="{{ route('master.barang.store') }}" method="POST">
                 @csrf
                 <div class="modal-header modal-header-primary">
-                    <strong>Tambah Barang Baru</strong>
+                    <span>Tambah Barang Baru</span>
                     <button type="button" class="modal-close" onclick="closeModal('modalTambahBarang')">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -113,24 +105,24 @@
                     </select>
 
                     <label>Harga (Rp)</label>
-                    <input type="number" name="harga" required placeholder="Contoh: 15000">
+                    <input type="number" name="harga" required placeholder="15000">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="button-hapus" style="background-color: #6c757d;" onclick="closeModal('modalTambahBarang')">Batal</button>
-                    <button type="submit" class="button-tambah-vendor" style="background-color: #0d6efd;">Simpan Barang</button>
+                    <button type="button" class="button-hapus" onclick="closeModal('modalTambahBarang')">Batal</button>
+                    <button type="submit" class="button-edit">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL EDIT BARANG -->
+    <!-- Modal Edit -->
     <div class="modal-overlay" id="modalEditBarang">
         <div class="modal-box">
             <form id="formEditBarang" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="modal-header modal-header-warning">
-                    <strong>Edit Data Barang</strong>
+                    <span>Edit Data Barang</span>
                     <button type="button" class="modal-close" onclick="closeModal('modalEditBarang')">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -163,13 +155,12 @@
                     </select>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="button-hapus" style="background-color: #6c757d;" onclick="closeModal('modalEditBarang')">Batal</button>
-                    <button type="submit" class="button-edit" style="background-color: #ffc107; color: black;">Update Barang</button>
+                    <button type="button" class="button-hapus" onclick="closeModal('modalEditBarang')">Batal</button>
+                    <button type="submit" class="button-edit">Update</button>
                 </div>
             </form>
         </div>
     </div>
-
 
     <script src="{{ asset('js/barang.js') }}"></script>
 </body>

@@ -6,18 +6,18 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
-            fonts: [
-                bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
-                }),
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/css/dashboard.css',  // File spesifik
+                'resources/js/dashboard.js',    // File spesifik
             ],
+            refresh: true,
         }),
-        tailwindcss(),
     ],
     server: {
         watch: {
+            usePolling: true, // Enables continuous detection of VS Code edits
             ignored: ['**/storage/framework/views/**'],
         },
     },

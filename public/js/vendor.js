@@ -23,8 +23,8 @@ function editVendor(id, nama, badanHukum, status) {
     openModal('modalEditVendor');
 }
 
-function confirmDelete(namaVendor) {
-    return confirm(`Apakah Anda yakin ingin menghapus vendor "${namaVendor}"?`);
+function confirmDelete(nama) {
+    return confirm(`Apakah Anda yakin ingin menghapus vendor "${nama}"?`);
 }
 
 window.onclick = function(event) {
@@ -32,4 +32,3 @@ window.onclick = function(event) {
         event.target.classList.remove('active');
     }
 };
-

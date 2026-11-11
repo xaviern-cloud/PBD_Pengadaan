@@ -11,18 +11,16 @@ class MarginPenjualanSeeder extends Seeder
         DB::table('margin_penjualan')->insert([
             [
                 'id_margin_penjualan' => 1,
-                'created_at'          => now(),
+                'dibuat_pada'          => now(),
                 'persen'              => 10.0, // Margin 10%
                 'STATUS'              => 1,
-                'updated_at'          => now(),
                 'id_user'             => 1, // Created by admin
             ],
             [
                 'id_margin_penjualan' => 2,
-                'created_at'          => now(),
+                'dibuat_pada'          => now(),
                 'persen'              => 15.0, // Margin 15%
                 'STATUS'              => 1,
-                'updated_at'          => now(),
                 'id_user'             => 1,
             ],
         ]);

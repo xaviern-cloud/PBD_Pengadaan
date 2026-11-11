@@ -3,35 +3,51 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up(): void
     {
         // 1. Role
-        Schema::create('role', function (Blueprint $table) {
-            $table->increments('id_role');
-            $table->string('nama_role', 100);
-        });
+        DB::unprepared("
+            CREATE TABLE IF NOT EXISTS role(
+            id_role INT AUTO_INCREMENT PRIMARY KEY,
+            nama_role varchar(16) NOT NULL
+            );
+        ");
 
         // 2. User
-        Schema::create('user', function (Blueprint $table) {
-            $table->increments('id_user');
-            $table->string('username', 45);
-            $table->string('password', 100);
-            $table->unsignedInteger('id_role')->nullable();
-
-            $table->foreign('id_role')->references('id_role')->on('role')->onDelete('set null');
-        });
+        DB::unprepared("
+            CREATE TABLE IF NOT EXISTS user(
+            id_user INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(45),
+            password VARCHAR(100),
+            id_role INT,
+            constraint fk_id_role FOREIGN KEY (id_role) REFERENCES role(id_role)
+        );");
 
         // 3. Satuan
-        Schema::create('satuan', function (Blueprint $table) {
-            $table->increments('id_satuan');
-            $table->string('nama_satuan', 45);
-            $table->tinyInteger('status')->default(1);
-        });
+        DB::unprepared("
+            CREATE TABLE IF NOT EXISTS satuan (
+            id_satuan INT AUTO_INCREMENT PRIMARY KEY,
+            nama_satuan VARCHAR(45),
+            status TINYINT);
+        ")
 
         // 4. Barang (Primary Key String Custom ID: BB-001)
+        DB::unprepared("
+            CREATE TABLE IF NOT EXISTS barang (
+            id_barang VARCHAR(20) PRIMARY KEY,
+            jenis_barang char(3),
+            nama_barang varchar(45),
+            id_satuan INT,
+            status TINYINT,
+            harga decimal(10,2),
+            
+            CONSTRAINT fk_id_satuan FOREIGN KEY (id_satuan) REFERENCES satuan(id_satuan)
+        ")
+        
         Schema::create('barang', function (Blueprint $table) {
             $table->string('id_barang', 20)->primary();
             $table->char('jenis_barang', 3);

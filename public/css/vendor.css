@@ -1,29 +1,14 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    background-image: linear-gradient(black, grey);
-    color: white;
+    background-image: linear-gradient(to bottom, #000000, #808080);
+    color: #ffffff;
     min-height: 100vh;
-}
-
-
-.card-master {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-}
-
-.table-vendor th {
-    background-color: #f1f5f9;
-    vertical-align: middle;
-}
-
-.filter-status-select {
-    min-width: 130px;
-    font-size: 0.875rem;
-}
-
-.modal-header-custom {
-    background-color: #0d6efd;
-    color: white;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .container-main {
@@ -35,13 +20,26 @@ body {
     gap: 24px;
 }
 
-.tabel-vendor{
+h1 {
+    background-color: #f0ffff;
+    color: #000000;
+    font-size: 32px;
+    border-radius: 16px;
+    padding: 8px 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tabel-vendor {
     border-collapse: separate;
     border-spacing: 20px 10px;
     margin: auto;
+    width: 100%;
+    max-width: 950px;
 }
 
-.tabel-vendor td, .tabel-vendor th {
+.tabel-vendor td,
+.tabel-vendor th {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
     box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
@@ -51,78 +49,71 @@ body {
     padding: 10px 20px;
     border-radius: 12px;
 }
-.status-aktif, .status-aktif{
-    background: rgba(30, 255, 0, 0.1);
+
+.status-aktif {
+    background: rgba(30, 255, 0, 0.2);
     backdrop-filter: blur(12px);
-    box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
     color: #ffffff;
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 10px 20px;
+    padding: 6px 14px;
     border-radius: 12px;
+    display: inline-block;
 }
-.status-nonaktif, .status-nonaktif {
+
+.status-nonaktif {
     background: rgba(255, 0, 0, 0.5);
     backdrop-filter: blur(12px);
-    box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1);
     color: #ffffff;
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 10px 20px; /* Menambah ruang di dalam sel */
+    padding: 6px 14px;
     border-radius: 12px;
-}
-
-.button-edit {
-    background-color: cyan;
-    width: fit-content;
-    height: 36px;
-    padding-left: 16px;
-    padding-right: 16px;
-    align-items: center;
-    justify-content: center;
-    margin:auto;
-    border-radius: 16px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.button-hapus {
-    background-color: red;
-    width: fit-content;
-    height: 36px;
-    padding-left: 16px;
-    padding-right: 16px;
-    align-items: center;
-    justify-content: center;
-    margin:auto;
-    border-radius: 16px;
-    font-family: Arial, Helvetica, sans-serif;
+    display: inline-block;
 }
 
 .button-tambah-vendor {
-    background-color: red;
-    width: fit-content;
+    background-color: #ff0000;
+    color: #ffffff;
     height: 36px;
-    padding-left: 16px;
-    padding-right: 16px;
-    align-items: center;
-    justify-content: center;
-    margin:auto;
+    padding: 0 20px;
     border-radius: 16px;
-    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
 }
+
+.button-edit {
+    background-color: #00ffff;
+    color: #000000;
+    height: 32px;
+    padding: 0 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.button-hapus {
+    background-color: #ff0000;
+    color: #ffffff;
+    height: 32px;
+    padding: 0 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 .dropdown-status {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-color: rgba(0, 0, 0, 0.1);
-    color:#f1f5f9;
-    width: fit-content;
-    height: 36px;
-    padding-left: 16px;
-    padding-right: 16px;
-    align-items: center;
-    justify-content: center;
-    margin:auto;
-    border-radius: 16px;
-    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.dropdown-status option {
+    background-color: #333333;
+    color: #ffffff;
 }
 
 .modal-overlay {
@@ -131,79 +122,38 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
-.modal-overlay.active {
-    display: flex;
-}
+.modal-overlay.active { display: flex; }
 
 .modal-box {
-    background-color: #fff;
-    border-radius: 6px;
+    background-color: #ffffff;
+    color: #333333;
+    border-radius: 12px;
     width: 100%;
-    max-width: 450px;
+    max-width: 420px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.modal-header {
-    padding: 14px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+.modal-header { padding: 14px 18px; display: flex; justify-content: space-between; font-weight: bold; }
+.modal-header-primary { background-color: #0d6efd; color: #ffffff; }
+.modal-header-warning { background-color: #ffc107; color: #000000; }
+.modal-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: inherit; }
+.modal-body { padding: 18px; }
+.modal-body label { display: block; margin-bottom: 6px; font-weight: bold; }
+.modal-body input, .modal-body select { width: 100%; padding: 8px 12px; margin-bottom: 14px; border: 1px solid #ccc; border-radius: 6px; }
+.modal-footer { padding: 12px 18px; background-color: #f8f9fa; display: flex; justify-content: flex-end; gap: 8px; }
 
-.modal-header-primary { background-color: #0d6efd; color: #fff; }
-.modal-header-warning { background-color: #ffc107; color: #000; }
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: inherit;
-}
-
-.modal-body {
-    padding: 18px;
-}
-
-.modal-footer {
-    padding: 12px 18px;
-    background-color: #f8f9fa;
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-h1, h2, h3 {
-    background-color: azure;
-    color: black;
-    font-size: 32px;
-    border-radius: 16px;
-    padding-right: 16px;
-    padding-left: 16px;
-    font-weight:bold;
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.85);
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 12px;
     text-align: center;
-
-}
-
-.button-penjualan {
-    background: rgba(255, 0, 0, 0.7);
-    box-shadow: 0 4px 24px rgba(255, 0, 0, 0.7);
-    width: fit-content;
-    height: 36px;
-    padding-left: 16px;
-    padding-right: 16px;
-    align-items: center;
-    justify-content: center;
-    margin:auto;
-    border-radius: 16px;
-    font-family: Arial, Helvetica, sans-serif;
-    backdrop-filter: blur(12px);
+    font-weight: bold;
 }

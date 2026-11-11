@@ -21,8 +21,8 @@ function editBarang(id, jenis, nama, idSatuan, harga, status) {
     openModal('modalEditBarang');
 }
 
-function confirmDelete(namaBarang) {
-    return confirm(`Apakah Anda yakin ingin menghapus barang "${namaBarang}"?`);
+function confirmDelete(nama) {
+    return confirm(`Apakah Anda yakin ingin menghapus barang "${nama}"?`);
 }
 
 window.onclick = function(event) {

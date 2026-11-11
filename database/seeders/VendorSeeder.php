@@ -34,7 +34,7 @@ class VendorSeeder extends Seeder
                 'id_vendor'   => 3,
                 'nama_vendor' => 'Megah Jaya Logistics',
                 'badan_hukum' => 'PT',
-                'status'      => '2', // NON-Aktif
+                'status'      => '0', // NON-Aktif
             ],
 
             // ==========================================
@@ -56,7 +56,7 @@ class VendorSeeder extends Seeder
                 'id_vendor'   => 6,
                 'nama_vendor' => 'Barokah Abadi Tehnik',
                 'badan_hukum' => 'CV',
-                'status'      => '2', // NON-Aktif
+                'status'      => '0', // NON-Aktif
             ],
 
             // ==========================================
@@ -72,7 +72,7 @@ class VendorSeeder extends Seeder
                 'id_vendor'   => 8,
                 'nama_vendor' => 'Maju Bersama Plastik',
                 'badan_hukum' => 'PD',
-                'status'      => '2', // NON-Aktif
+                'status'      => '0', // NON-Aktif
             ],
 
             // ==========================================
@@ -88,7 +88,7 @@ class VendorSeeder extends Seeder
                 'id_vendor'   => 10,
                 'nama_vendor' => 'Koperasi Karyawan Sejahtera',
                 'badan_hukum' => 'K',
-                'status'      => '2', // NON-Aktif
+                'status'      => '0', // NON-Aktif
             ],
 
             // ==========================================
@@ -114,7 +114,7 @@ class VendorSeeder extends Seeder
                 'id_vendor'   => 13,
                 'nama_vendor' => 'Petani Sayur Organik Pak Budi',
                 'badan_hukum' => 'PR',
-                'status'      => '2', // NON-Aktif
+                'status'      => '0', // NON-Aktif
             ],
         ]);
     }

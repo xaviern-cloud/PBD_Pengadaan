@@ -7,6 +7,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // 1. View Barang
         DB::statement("
             CREATE OR REPLACE VIEW v_barang AS
             SELECT
@@ -17,54 +18,55 @@ return new class extends Migration
                     WHEN b.jenis_barang = 'BJ'  THEN 'Barang Jadi'
                     WHEN b.jenis_barang = 'BO'  THEN 'Barang Operasional'
                     WHEN b.jenis_barang = 'BK'  THEN 'Barang Konsumen'
-                    else 'Belum di Kategorikan'
-                END as jenis_barang,
+                    ELSE 'Belum dikategorikan'
+                END AS jenis_barang,
                 b.nama_barang,
                 s.nama_satuan,
                 b.harga,
                 CASE
-                    WHEN b.status ='1' THEN 'Aktif'
-                    WHEN b.status ='2' THEN 'Non-Aktif'
-                    else 'Status Belum Diberikan'
-                END as status
+                    WHEN b.status = 1 OR b.status = '1' THEN 'Aktif'
+                    ELSE 'Non-Aktif'
+                END AS status
             FROM barang b
             LEFT JOIN satuan s ON b.id_satuan = s.id_satuan
         ");
 
+        // 2. View Satuan
         DB::statement("
             CREATE OR REPLACE VIEW v_satuan AS
             SELECT
                 id_satuan,
                 nama_satuan,
                 CASE
-                    WHEN status ='1' THEN 'AKTIF'
-                    WHEN status ='2' THEN 'NON-AKTIF'
-                    else 'Status Belum Diberikan'
-                END as Status
+                    WHEN status = 1 OR status = '1' THEN 'Aktif'
+                    ELSE 'Non-Aktif'
+                END AS status
             FROM satuan
         ");
 
+        // 3. View Vendor
         DB::statement("
             CREATE OR REPLACE VIEW v_vendor AS
             SELECT
                 id_vendor,
                 nama_vendor,
                 CASE
-                    WHEN badan_hukum ='PT'  THEN 'Perseroan Terbatas (PT)'
-                    WHEN badan_hukum ='CV'  THEN 'Commanditaire Vennootschap (CV)'
-                    WHEN badan_hukum ='PD'  THEN 'Perusahaan Dagang (PD)'
-                    WHEN badan_hukum ='K'   THEN 'Koperasi'
-                    WHEN badan_hukum ='Fa'  THEN 'Firma'
-                    else 'Perorangan/Non Badan Hukum'
-                END as badan_hukum,
+                    WHEN badan_hukum = 'P' OR badan_hukum = 'PT' THEN 'Perseroan Terbatas (PT)'
+                    WHEN badan_hukum = 'C' OR badan_hukum = 'CV' THEN 'Commanditaire Vennootschap (CV)'
+                    WHEN badan_hukum = 'U' OR badan_hukum = 'UD' THEN 'Usaha Dagang (UD)'
+                    WHEN badan_hukum = 'PD' THEN 'Perusahaan Dagang (PD)'
+                    WHEN badan_hukum = 'K'  THEN 'Koperasi'
+                    WHEN badan_hukum = 'Fa' THEN 'Firma'
+                    ELSE 'Perorangan/Non Badan Hukum'
+                END AS badan_hukum,
                 CASE
-                    WHEN status ='1' THEN 'AKTIF'
-                    WHEN status ='2' THEN 'NON-AKTIF'
-                    else 'Status Belum Diberikan'
-                END as Status
+                    WHEN status = 'A' OR status = 1 OR status = '1' THEN 'Aktif'
+                    ELSE 'Non-Aktif'
+                END AS status
             FROM vendor
         ");
 
+        // 4. View User
         DB::statement("
             CREATE OR REPLACE VIEW v_user AS
             SELECT
@@ -75,6 +77,7 @@ return new class extends Migration
             LEFT JOIN role r ON u.id_role = r.id_role
         ");
 
+        // 5. View Role
         DB::statement("
             CREATE OR REPLACE VIEW v_role AS
             SELECT
@@ -83,19 +86,18 @@ return new class extends Migration
             FROM role
         ");
 
+        // 6. View Margin Penjualan
         DB::statement("
             CREATE OR REPLACE VIEW v_margin_penjualan AS
             SELECT
                 m.id_margin_penjualan,
                 m.persen,
                 CASE
-                    WHEN status ='1' THEN 'AKTIF'
-                    WHEN status ='2' THEN 'NON-Aktif'
-                    else 'Status Belum Diberikan'
-                END as Status,
+                    WHEN m.status = 1 OR m.status = '1' THEN 'Aktif'
+                    ELSE 'Non-Aktif'
+                END AS status,
                 u.username AS dibuat_oleh,
-                m.created_at,
-                m.updated_at
+                m.dibuat_pada
             FROM margin_penjualan m
             LEFT JOIN user u ON m.id_user = u.id_user
         ");

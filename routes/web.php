@@ -7,7 +7,7 @@ use App\Http\Controllers\MasterController;
 
 Route::get('/', function () {
     return view('dashboard');
-});
+})->name('dashboard');
 
 Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
 Route::post('/penjualan', [PenjualanController::class, 'store'])->name('penjualan.store');
