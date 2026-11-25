@@ -1,5 +1,6 @@
 <?php
-    namespace Database\Seeders;
+
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -11,17 +12,24 @@ class MarginPenjualanSeeder extends Seeder
         DB::table('margin_penjualan')->insert([
             [
                 'id_margin_penjualan' => 1,
-                'dibuat_pada'          => now(),
-                'persen'              => 10.0, // Margin 10%
-                'STATUS'              => 1,
-                'id_user'             => 1, // Created by admin
+                'persen'              => 15.0,
+                'status'              => 1,
+                'id_user'             => 1,
+                'created_at'          => now(),
             ],
             [
                 'id_margin_penjualan' => 2,
-                'dibuat_pada'          => now(),
-                'persen'              => 15.0, // Margin 15%
-                'STATUS'              => 1,
+                'persen'              => 25.0,
+                'status'              => 1,
                 'id_user'             => 1,
+                'created_at'          => now(),
+            ],
+            [
+                'id_margin_penjualan' => 3,
+                'persen'              => 10.0,
+                'status'              => 0, // Non-Aktif untuk demo filter
+                'id_user'             => 1,
+                'created_at'          => now(),
             ],
         ]);
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -13,20 +14,20 @@ class UserSeeder extends Seeder
             [
                 'id_user'  => 1,
                 'username' => 'admin',
-                'PASSWORD' => Hash::make('password123'),
-                'id_role'  => 1, // Administrator
+                'password' => Hash::make('admin123'),
+                'id_role'  => 1, // Admin (Full Control)
             ],
             [
                 'id_user'  => 2,
-                'username' => 'purchasing_user',
-                'PASSWORD' => Hash::make('password123'),
-                'id_role'  => 2, // Manager / Purchasing
+                'username' => 'kasir',
+                'password' => Hash::make('kasir123'),
+                'id_role'  => 2, // Kasir (POS Penjualan)
             ],
             [
                 'id_user'  => 3,
-                'username' => 'kasir1',
-                'PASSWORD' => Hash::make('password123'),
-                'id_role'  => 3, // Kasir
+                'username' => 'manager',
+                'password' => Hash::make('manager123'),
+                'id_role'  => 3, // Manager (Pengadaan, Penerimaan, Retur)
             ],
         ]);
     }

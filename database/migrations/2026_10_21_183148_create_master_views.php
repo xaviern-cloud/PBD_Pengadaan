@@ -97,14 +97,42 @@ return new class extends Migration
                     ELSE 'Non-Aktif'
                 END AS status,
                 u.username AS dibuat_oleh,
-                m.dibuat_pada
+                m.created_at
             FROM margin_penjualan m
             LEFT JOIN user u ON m.id_user = u.id_user
         ");
+
+        // 7. View Kartu Stok
+        DB::statement("
+            CREATE OR REPLACE VIEW vw_kartu_stok AS
+            SELECT
+                ks.id_kartu_stok,
+                ks.update_terakhir AS tanggal,
+                b.id_barang,
+                b.nama_barang,
+                s.nama_satuan,
+                CASE
+                    WHEN ks.jenis_transaksi = 'M' THEN 'Penerimaan (Masuk)'
+                    WHEN ks.jenis_transaksi = 'K' THEN 'Penjualan (Keluar)'
+                    WHEN ks.jenis_transaksi = 'R' THEN 'Retur Vendor (Keluar)'
+                    ELSE 'Lainnya'
+                END AS jenis_transaksi,
+                ks.masuk,
+                ks.keluar,
+                ks.stock AS stok_akhir,
+                ks.id_transaksi AS ref_id_transaksi
+            FROM kartu_stok ks
+            JOIN barang b ON ks.id_barang = b.id_barang
+            LEFT JOIN satuan s ON b.id_satuan = s.id_satuan
+            ORDER BY ks.update_terakhir DESC, ks.id_kartu_stok DESC
+        ");
+
+
     }
 
     public function down(): void
     {
+        DB::statement("DROP VIEW IF EXISTS vw_kartu_stok");
         DB::statement("DROP VIEW IF EXISTS v_barang");
         DB::statement("DROP VIEW IF EXISTS v_satuan");
         DB::statement("DROP VIEW IF EXISTS v_vendor");
