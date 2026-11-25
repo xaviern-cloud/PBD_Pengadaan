@@ -97,43 +97,43 @@ class PengadaanController extends Controller
             return back()->with('error', 'Keranjang PO masih kosong!');
         }
 
-        $subtotal = array_sum(array_column($cart, 'sub_total'));
-        $idUser = session('id_user', 1);$pdo = DB::getPdo();
+        $idUser = session('id_user', 1);
+        $pdo = DB::getPdo();
 
         try {
             $pdo->beginTransaction();
 
-            // Panggil Stored Procedure Simpan Header PO
-            $stmt =$pdo->prepare("CALL sp_insert_pengadaan(:id_user, :id_vendor, :subtotal, @id_po_baru)");
-            $stmt->execute([
-                'id_user'   => $idUser,
-                'id_vendor' => $request->id_vendor,
-                'subtotal'  => $subtotal,
-            ]);
-            $stmt->closeCursor();
+            // 1. Set @id_po_baru = 0 agar item pertama otomatis membuat header pengadaan di SP
+            $pdo->exec("SET @id_po_baru = 0");
 
-            $idPoBaru =$pdo->query("SELECT @id_po_baru AS id")->fetch(\PDO::FETCH_OBJ)->id;
-
-            // Insert Detail Pengadaan
-            $stmtDetail =$pdo->prepare("
-                INSERT INTO detail_pengadaan (harga_satuan, jumlah, sub_total, id_barang, id_pengadaan)
-                VALUES (:harga_satuan, :jumlah, :sub_total, :id_barang, :id_pengadaan)
+            // 2. Siapkan panggilan sp_simpan_pengadaan (Pola INOUT per-item)
+            $stmt = $pdo->prepare("
+                CALL sp_simpan_pengadaan(:id_user, :id_vendor, :id_barang, :jumlah, :harga, @id_po_baru)
             ");
 
-            foreach ($cart as $item) {$stmtDetail->execute([
-                    'harga_satuan' => $item['harga_satuan'],
-                    'jumlah'       => $item['jumlah'],
-                    'sub_total'    => $item['sub_total'],
-                    'id_barang'    => $item['id_barang'],
-                    'id_pengadaan' => $idPoBaru,
+            // 3. Looping setiap item di keranjang (SP otomatis insert detail & update subtotal + PPN header)
+            foreach ($cart as $item) {
+                $stmt->execute([
+                    ':id_user'   => $idUser,
+                    ':id_vendor' => $request->id_vendor,
+                    ':id_barang' => $item['id_barang'],
+                    ':jumlah'    => $item['jumlah'],
+                    ':harga'     => $item['harga_satuan'],
                 ]);
+                $stmt->closeCursor();
             }
+
+            // 4. Ambil ID Pengadaan yang baru terbentuk dari parameter INOUT
+            $idPoBaru = $pdo->query("SELECT @id_po_baru AS id")->fetch(\PDO::FETCH_OBJ)->id;
 
             $pdo->commit();
             session()->forget('po_cart');
 
             return redirect()->route('pengadaan.nota', $idPoBaru)->with('success', 'Dokumen Pengadaan (PO) berhasil disimpan!');
-        } catch (\Exception $e) {$pdo->rollBack();
+        } catch (\Exception $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             return back()->with('error', 'Gagal menyimpan PO: ' . $e->getMessage());
         }
     }

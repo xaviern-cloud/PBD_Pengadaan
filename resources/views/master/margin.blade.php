@@ -53,11 +53,13 @@
                                         onclick="editMargin({{ $m->id_margin_penjualan }}, '{{ $m->persen }}', '{{ $m->id_user ?? '' }}', '{{ $m->status ?? '' }}')">
                                     Edit
                                 </button>
-                                <form action="{{ route('master.margin.destroy', $m->id_margin_penjualan) }}" method="POST" style="display: inline;" onsubmit="return confirmDelete('{{ $m->persen }}')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="button-hapus">Hapus</button>
-                                </form>
+                                @if(str_contains(strtolower(session('role', '')), 'admin'))
+                                    <form action="{{ route('master.margin.destroy', $m->id_margin_penjualan) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-hapus">Hapus</button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

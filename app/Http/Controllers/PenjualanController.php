@@ -127,14 +127,13 @@ class PenjualanController extends Controller
             return back()->with('error', 'Keranjang belanja masih kosong!');
         }
 
-        $subtotal = array_sum(array_column($cart, 'subtotal'));
         $idUser = session('id_user', 1);
         $pdo = DB::getPdo();
 
         try {
             $pdo->beginTransaction();
 
-            // Validasi ulang stok terakhir via fn_cek_stok()
+            // 1. Validasi ulang stok terakhir via fn_cek_stok()
             $stmtStok = $pdo->prepare("SELECT fn_cek_stok(:id) AS stok");
             foreach ($cart as $item) {
                 $stmtStok->execute(['id' => $item['id_barang']]);
@@ -145,39 +144,37 @@ class PenjualanController extends Controller
                 }
             }
 
-            // Panggil SP Simpan Header Penjualan
-            $stmt = $pdo->prepare("CALL sp_insert_penjualan(:id_user, :id_margin, :subtotal, @id_jual_baru)");
-            $stmt->execute([
-                'id_user'   => $idUser,
-                'id_margin' => $request->idmargin,
-                'subtotal'  => $subtotal,
-            ]);
-            $stmt->closeCursor();
+            // 2. Set @id_jual_baru = 0 agar item pertama otomatis membuat header penjualan
+            $pdo->exec("SET @id_jual_baru = 0");
 
-            $idJualBaru = $pdo->query("SELECT @id_jual_baru AS id")->fetch(\PDO::FETCH_OBJ)->id;
-
-            // Insert Detail Penjualan (Memicu Trigger after_insert_detail_penjualan -> Kartu Stok Keluar 'K')
-            $stmtDet = $pdo->prepare("
-                INSERT INTO detail_penjualan (harga_satuan, jumlah, subtotal, id_penjualan, id_barang)
-                VALUES (:harga_satuan, :jumlah, :subtotal, :id_penjualan, :id_barang)
+            // 3. Siapkan panggilan sp_simpan_penjualan (Pola INOUT per-item)
+            $stmt = $pdo->prepare("
+                CALL sp_simpan_penjualan(:id_user, :id_margin, :id_barang, :jumlah, :harga, @id_jual_baru)
             ");
 
+            // 4. Looping setiap item (SP otomatis insert detail_penjualan, update total/PPN header, & memicu trigger stok keluar 'K')
             foreach ($cart as $item) {
-                $stmtDet->execute([
-                    'harga_satuan' => $item['harga_jual'],
-                    'jumlah'       => $item['jumlah'],
-                    'subtotal'     => $item['subtotal'],
-                    'id_penjualan' => $idJualBaru,
-                    'id_barang'    => $item['id_barang'],
+                $stmt->execute([
+                    ':id_user'   => $idUser,
+                    ':id_margin' => $request->idmargin,
+                    ':id_barang' => $item['id_barang'],
+                    ':jumlah'    => $item['jumlah'],
+                    ':harga'     => $item['harga_jual'],
                 ]);
+                $stmt->closeCursor();
             }
+
+            // 5. Ambil ID Penjualan yang baru terbentuk dari parameter INOUT
+            $idJualBaru = $pdo->query("SELECT @id_jual_baru AS id")->fetch(\PDO::FETCH_OBJ)->id;
 
             $pdo->commit();
             session()->forget('pos_cart');
 
             return redirect()->route('penjualan.nota', $idJualBaru)->with('success', 'Transaksi penjualan berhasil!');
         } catch (\Exception $e) {
-            $pdo->rollBack();
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             return back()->with('error', 'Checkout gagal: ' . $e->getMessage());
         }
     }

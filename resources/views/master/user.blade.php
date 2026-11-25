@@ -38,11 +38,13 @@
                                         onclick="editUser({{ $u->id_user }}, '{{ addslashes($u->username) }}', '{{ $u->id_role ?? '' }}')">
                                     Edit
                                 </button>
-                                <form action="{{ route('master.user.destroy', $u->id_user) }}" method="POST" style="display: inline;" onsubmit="return confirmDelete('{{ $u->username }}')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="button-hapus">Hapus</button>
-                                </form>
+                                @if(str_contains(strtolower(session('role', '')), 'admin'))
+                                    <form action="{{ route('master.user.destroy', $u->id_user) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-hapus">Hapus</button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

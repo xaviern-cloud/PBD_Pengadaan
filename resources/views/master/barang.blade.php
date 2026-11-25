@@ -57,11 +57,13 @@
                                         onclick="editBarang('{{ $b->id_barang }}', '{{ $b->jenis_barang }}', '{{ addslashes($b->nama_barang) }}', '{{ $b->id_satuan ?? '' }}', '{{ $b->harga }}', '{{ $b->status ?? '' }}')">
                                     Edit
                                 </button>
-                                <form action="{{ route('master.barang.destroy', $b->id_barang) }}" method="POST" style="display: inline;" onsubmit="return confirmDelete('{{ $b->nama_barang }}')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="button-hapus">Hapus</button>
-                                </form>
+                                @if(str_contains(strtolower(session('role', '')), 'admin'))
+                                    <form action="{{ route('master.barang.destroy', $b->id_barang) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-hapus">Hapus</button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

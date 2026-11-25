@@ -454,4 +454,76 @@ class MasterController extends Controller
             'margin'
         ));
     }
+
+    /* =========================================================================
+     * 8. DASHBOARD (Katalog Barang Aktif + Stok Real-Time)
+     * ========================================================================= */
+    public function dashboard()
+    {
+        $pdo = $this->getPdo();
+
+        $stmt = $pdo->prepare("
+            SELECT
+                id_barang,
+                jenis_barang,
+                nama_barang,
+                nama_satuan,
+                harga,
+                fn_cek_stok(id_barang) AS stok
+            FROM v_barang
+            WHERE status = 'Aktif'
+            ORDER BY id_barang ASC
+        ");
+        $stmt->execute();
+        $katalog = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        return view('dashboard', compact('katalog'));
+    }
+
+    /* =========================================================================
+     * 9. KARTU STOK (Baca Langsung dari Tabel kartu_stok yang Sudah Ada)
+     * ========================================================================= */
+    public function kartuStok(Request $request)
+    {
+        $jenis = $request->query('jenis', 'All');
+        $pdo   = $this->getPdo();
+
+        $sql = "
+            SELECT
+                ks.id_kartu_stok,
+                ks.update_terakhir AS tanggal,
+                b.id_barang,
+                b.nama_barang,
+                s.nama_satuan,
+                CASE
+                    WHEN ks.jenis_transaksi = 'M' THEN 'Penerimaan (Masuk)'
+                    WHEN ks.jenis_transaksi = 'K' THEN 'Penjualan (Keluar)'
+                    WHEN ks.jenis_transaksi = 'R' THEN 'Retur Vendor (Keluar)'
+                    ELSE 'Lainnya'
+                END AS jenis_transaksi,
+                ks.masuk,
+                ks.keluar,
+                ks.stock AS stok_akhir,
+                ks.id_transaksi AS ref_id_transaksi
+            FROM kartu_stok ks
+            JOIN barang b ON ks.id_barang = b.id_barang
+            LEFT JOIN satuan s ON b.id_satuan = s.id_satuan
+        ";
+
+        if (in_array($jenis, ['M', 'K', 'R'])) {
+            $sql .= " WHERE ks.jenis_transaksi = :jenis";
+        }
+
+        $sql .= " ORDER BY ks.update_terakhir DESC, ks.id_kartu_stok DESC";
+
+        $stmt = $pdo->prepare($sql);
+        if (in_array($jenis, ['M', 'K', 'R'])) {
+            $stmt->execute([':jenis' => $jenis]);
+        } else {
+            $stmt->execute();
+        }
+
+        $kartuStok = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return view('laporan.kartu_stok', compact('kartuStok', 'jenis'));
+    }
 }

@@ -51,11 +51,13 @@
                                         onclick="editSatuan({{ $s->id_satuan }}, '{{ addslashes($s->nama_satuan) }}', '{{ $s->status ?? '' }}')">
                                     Edit
                                 </button>
-                                <form action="{{ route('master.satuan.destroy', $s->id_satuan) }}" method="POST" style="display: inline;" onsubmit="return confirmDelete('{{ $s->nama_satuan }}')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="button-hapus">Hapus</button>
-                                </form>
+                                @if(str_contains(strtolower(session('role', '')), 'admin'))
+                                    <form action="{{ route('master.satuan.destroy', $s->id_satuan) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-hapus">Hapus</button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

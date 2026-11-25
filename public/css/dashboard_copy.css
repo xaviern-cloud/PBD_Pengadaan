@@ -1,0 +1,105 @@
+body {
+    width: 100%;
+    min-height: 100vh; /* Agar background selalu penuh setinggi layar */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/Dreamy_.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+/* 1. Navigasi Atas */
+.top-nav {
+    background-color: #292D54;
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.top-nav a {
+    flex: 1;
+    text-align: center;
+    color: #E7EAF5;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+.top-nav a:hover {
+    background-color: #747ead;
+    transition-duration: 0.3s;
+}
+
+/* 2. Container Pembungkus Utama (Menyusun Ke Samping) */
+.main-wrapper {
+    display: flex;
+    flex-direction: row; /* Berjajar ke samping */
+    gap: 24px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+/* 3. Kotak Teks (Kiri) */
+.main-container-text {
+    flex: 1;
+    background: #000000;
+    color: #E7EAF5;
+    border-radius: 16px;
+    padding: 32px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* 4. Kotak Model 3D (Kanan) */
+.main-container-model {
+    flex: 1;
+    background-color: rgba(1. 1. 1. 0,5);
+    border-radius: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+    width:100%;
+}
+
+.main-container-model model-viewer {
+    width: 100%;
+    height: 100%;
+}
+
+/* Styling Tombol */
+.btn-pembelian {
+    display: inline-block;
+    background-color: #747ead;
+    color: #ffffff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    width: fit-content;
+}
+
+.btn-pembelian:hover {
+    background-color: #59628f;
+}
+
+.katalog {
+    color:#E7EAF5;
+    background-color: #292D54;
+    border-radius: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+}

@@ -7,27 +7,50 @@
 </head>
 <body class="bg-[#15162B] text-white min-h-screen p-6">
     <div class="max-w-7xl mx-auto space-y-6">
-        <div class="flex flex-wrap justify-between items-center bg-[#292D54] p-4 rounded-xl border border-indigo-500/30">
+        <!-- Header & Navigasi Satu Baris -->
+        <div class="flex flex-wrap justify-between items-center gap-4 bg-[#292D54] p-4 rounded-xl border border-indigo-500/30">
             <div>
                 <h1 class="text-xl font-bold text-emerald-300">Point of Sale (POS) - Kasir Penjualan</h1>
-                <p class="text-xs text-gray-300">Harga Jual dihitung otomatis oleh SQL Function <code>get_harga_jual()</code> & Stok oleh <code>fn_cek_stok()</code></p>
+                <p class="text-xs text-gray-300">
+                    Petugas: <strong class="text-white">{{ session('username', 'Kasir') }}</strong> ({{ session('role', 'Kasir') }}) &bull;
+                    Harga Jual: <code>get_harga_jual()</code> &bull; Stok: <code>fn_cek_stok()</code>
+                </p>
             </div>
-            <div class="flex items-center gap-3 text-sm">
+
+            <div class="flex flex-wrap items-center gap-3 text-sm">
                 <!-- Pilih Margin Aktif -->
-                <form action="{{ route('penjualan.index') }}" method="GET" class="flex items-center gap-2">
-                    <label class="text-xs text-gray-300">Margin Aktif:</label>
-                    <select name="idmargin" onchange="this.form.submit()" class="px-2 py-1 rounded bg-[#15162B] border border-indigo-400/40 text-xs">
+                <form action="{{ route('penjualan.index') }}" method="GET" class="flex items-center gap-2 bg-[#15162B] px-3 py-1.5 rounded-lg border border-indigo-400/30">
+                    <label class="text-xs text-gray-300">Margin:</label>
+                    <select name="idmargin" onchange="this.form.submit()" class="bg-transparent text-emerald-300 font-semibold text-xs focus:outline-none">
                         @foreach($margins as $m)
-                            <option value="{{ $m->id_margin_penjualan }}" {{ $selectedMargin == $m->id_margin_penjualan ? 'selected' : '' }}>
+                            <option value="{{ $m->id_margin_penjualan }}" class="bg-[#15162B]" {{ $selectedMargin == $m->id_margin_penjualan ? 'selected' : '' }}>
                                 {{ $m->persen }}%
                             </option>
                         @endforeach
                     </select>
                 </form>
-                <a href="{{ route('kartu-stok.index') }}" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg">Kartu Stok</a>
-                <form action="{{ route('logout') }}" method="POST">
+
+                <!-- Tombol Menu Retur Barang (Bisa diakses Kasir, Manager, Admin) -->
+                <a href="{{ route('retur.index') }}" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-lg transition">
+                    Menu Retur Barang &rarr;
+                </a>
+
+                <!-- Tombol Dashboard & Kartu Stok (Hanya untuk Manager & Admin, disembunyikan dari Kasir) -->
+                @if(!str_contains(strtolower(session('role', '')), 'kasir'))
+                    <a href="{{ route('dashboard') }}" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg transition">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('kartu-stok.index') }}" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg transition">
+                        Kartu Stok
+                    </a>
+                @endif
+
+                <!-- Tombol Logout Tunggal -->
+                <form action="{{ route('logout') }}" method="POST" class="m-0">
                     @csrf
-                    <button class="px-3 py-1.5 bg-red-600/80 hover:bg-red-600 rounded-lg">Logout</button>
+                    <button type="submit" class="px-3 py-1.5 bg-red-600/80 hover:bg-red-600 rounded-lg font-semibold transition">
+                        Logout
+                    </button>
                 </form>
             </div>
         </div>

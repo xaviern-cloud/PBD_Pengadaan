@@ -85,47 +85,42 @@ class PenerimaanController extends Controller
         try {
             $pdo->beginTransaction();
 
-            // 1. Panggil SP Simpan Header Penerimaan
-            $stmt = $pdo->prepare("CALL sp_insert_penerimaan(:id_po, :id_user, @id_terima_baru)");
-            $stmt->execute([
-                'id_po'   => $idPengadaan,
-                'id_user' => $idUser,
-            ]);
-            $stmt->closeCursor();
+            // 1. Set @id_terima_baru = 0 agar item pertama otomatis membuat header penerimaan
+            $pdo->exec("SET @id_terima_baru = 0");
 
-            $idTerimaBaru = $pdo->query("SELECT @id_terima_baru AS id")->fetch(\PDO::FETCH_OBJ)->id;
-
-            // 2. Insert Detail Penerimaan (Memicu Trigger after_insert_detail_penerimaan -> Kartu Stok Masuk 'M')
-            $stmtDet = $pdo->prepare("
-                INSERT INTO detail_penerimaan (id_penerimaan, id_barang, jumlah_terima, harga_satuan_terima, sub_total_terima)
-                VALUES (:id_penerimaan, :id_barang, :jumlah_terima, :harga_satuan, :sub_total)
+            // 2. Siapkan panggilan sp_simpan_penerimaan (Pola INOUT per-item)
+            $stmt = $pdo->prepare("
+                CALL sp_simpan_penerimaan(:id_po, :id_user, :id_barang, :jumlah_terima, :harga, @id_terima_baru)
             ");
 
+            // 3. Looping setiap item (SP otomatis insert detail, trigger stok 'M', & update status PO 'S'/'F')
             foreach ($validItems as $idBarang => $item) {
-                $stmtDet->execute([
-                    'id_penerimaan' => $idTerimaBaru,
-                    'id_barang'     => $idBarang,
-                    'jumlah_terima' => $item['jumlah_terima'],
-                    'harga_satuan'  => $item['harga_satuan'],
-                    'sub_total'     => $item['jumlah_terima'] * $item['harga_satuan'],
+                $stmt->execute([
+                    ':id_po'         => $idPengadaan,
+                    ':id_user'       => $idUser,
+                    ':id_barang'     => $idBarang,
+                    ':jumlah_terima' => $item['jumlah_terima'],
+                    ':harga'         => $item['harga_satuan'],
                 ]);
+                $stmt->closeCursor();
             }
 
-            // 3. Cek kelengkapan PO memakai SQL Function fn_pengadaan_selesai()
-            $stmtCek = $pdo->prepare("SELECT fn_pengadaan_selesai(:id_po) AS selesai");
-            $stmtCek->execute(['id_po' => $idPengadaan]);
-            $isSelesai = (int) $stmtCek->fetch(\PDO::FETCH_OBJ)->selesai;
+            // 4. Ambil ID Penerimaan yang baru terbentuk dari parameter INOUT
+            $idTerimaBaru = $pdo->query("SELECT @id_terima_baru AS id")->fetch(\PDO::FETCH_OBJ)->id;
 
-            $statusBaru = $isSelesai === 1 ? 'F' : 'S';
-            $stmtUpd = $pdo->prepare("UPDATE pengadaan SET status = :status WHERE id_pengadaan = :id_po");
-            $stmtUpd->execute(['status' => $statusBaru, 'id_po' => $idPengadaan]);
+            // 5. Ambil status PO terbaru (hasil update otomatis SP) untuk pesan notifikasi
+            $stmtStatus = $pdo->prepare("SELECT status FROM pengadaan WHERE id_pengadaan = :id_po LIMIT 1");
+            $stmtStatus->execute([':id_po' => $idPengadaan]);
+            $statusBaru = $stmtStatus->fetch(\PDO::FETCH_OBJ)->status ?? 'S';
 
             $pdo->commit();
 
             return redirect()->route('penerimaan.nota', $idTerimaBaru)
                 ->with('success', 'Penerimaan dicatat & stok bertambah otomatis! Status PO: ' . ($statusBaru === 'F' ? 'Finished' : 'Sebagian'));
         } catch (\Exception $e) {
-            $pdo->rollBack();
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             return back()->with('error', 'Gagal memproses penerimaan: ' . $e->getMessage());
         }
     }
