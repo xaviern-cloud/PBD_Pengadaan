@@ -71,6 +71,9 @@
                 </tbody>
             </table>
         </div>
+        <a href="/">
+        <button class='button-penjualan' type="button">Dashboard</button>
+        </a>
     </div>
 
     <!-- Modal Tambah -->

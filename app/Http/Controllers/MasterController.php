@@ -47,12 +47,12 @@ class MasterController extends Controller
             'jenis_barang' => 'required|in:BB,BSJ,BJ,BO,BK',
             'nama_barang'  => 'required|string|max:255',
             'id_satuan'    => 'required|integer',
-            'harga'        => 'required|numeric',
+            'harga'        => 'required|numeric|min:0',
         ]);
 
         $pdo = $this->getPdo();
 
-        // Opsi 1: Panggil Stored Procedure (Trigger BEFORE INSERT otomatis generate ID "BB-001")
+        // Panggil Stored Procedure sp_tambah_barang (Trigger BEFORE INSERT otomatis generate ID "BB-001")
         $stmt = $pdo->prepare("CALL sp_tambah_barang(:jenis, :nama, :id_satuan, :harga, @id_baru)");
         $stmt->execute([
             ':jenis'     => $request->jenis_barang,
@@ -60,8 +60,11 @@ class MasterController extends Controller
             ':id_satuan' => $request->id_satuan,
             ':harga'     => $request->harga,
         ]);
+        $stmt->closeCursor();
 
-        return redirect()->back()->with('success', 'Barang berhasil ditambahkan!');
+        $idBaru = $pdo->query("SELECT @id_baru AS id")->fetch(PDO::FETCH_OBJ)->id ?? '';
+
+        return redirect()->back()->with('success', "Barang baru ({$idBaru}) berhasil ditambahkan!");
     }
 
     public function updateBarang(Request $request, $id)
@@ -70,7 +73,7 @@ class MasterController extends Controller
             'jenis_barang' => 'required|in:BB,BSJ,BJ,BO,BK',
             'nama_barang'  => 'required|string|max:255',
             'id_satuan'    => 'required|integer',
-            'harga'        => 'required|numeric',
+            'harga'        => 'required|numeric|min:0',
             'status'       => 'required|in:1,0',
         ]);
 
@@ -90,7 +93,7 @@ class MasterController extends Controller
             ':id_satuan' => $request->id_satuan,
             ':harga'     => $request->harga,
             ':status'    => $request->status,
-            ':id'        => $id, // Parameter ID berupa String (cth: 'BB-001')
+            ':id'        => $id,
         ]);
 
         return redirect()->back()->with('success', 'Data barang berhasil diperbarui!');
@@ -257,9 +260,11 @@ class MasterController extends Controller
     public function storeMargin(Request $request)
     {
         $request->validate([
-            'persen'  => 'required|numeric',
-            'id_user' => 'required|integer',
+            'persen' => 'required|numeric|min:0',
         ]);
+
+        // Ambil ID User otomatis dari session yang sedang login
+        $idUser = session('id_user') ?? session('user_id') ?? 1;
 
         $pdo = $this->getPdo();
         $stmt = $pdo->prepare("
@@ -268,7 +273,7 @@ class MasterController extends Controller
         ");
         $stmt->execute([
             ':persen'  => $request->persen,
-            ':id_user' => $request->id_user,
+            ':id_user' => $idUser,
         ]);
 
         return redirect()->back()->with('success', 'Margin penjualan berhasil ditambahkan!');
@@ -277,10 +282,12 @@ class MasterController extends Controller
     public function updateMargin(Request $request, $id)
     {
         $request->validate([
-            'persen'  => 'required|numeric',
-            'status'  => 'required|in:1,0',
-            'id_user' => 'required|integer',
+            'persen' => 'required|numeric|min:0',
+            'status' => 'required|in:1,0',
         ]);
+
+        // Ambil ID User otomatis dari session yang sedang login
+        $idUser = session('id_user') ?? session('user_id') ?? 1;
 
         $pdo = $this->getPdo();
         $stmt = $pdo->prepare("
@@ -291,7 +298,7 @@ class MasterController extends Controller
         $stmt->execute([
             ':persen'  => $request->persen,
             ':status'  => $request->status,
-            ':id_user' => $request->id_user,
+            ':id_user' => $idUser,
             ':id'      => $id,
         ]);
 
@@ -314,11 +321,17 @@ class MasterController extends Controller
     public function user()
     {
         $pdo = $this->getPdo();
+
         $stmt = $pdo->prepare("SELECT * FROM v_user ORDER BY id_user ASC");
         $stmt->execute();
-
         $user = $stmt->fetchAll(PDO::FETCH_OBJ);
-        return view('master.user', compact('user'));
+
+        // Ambil daftar role dari v_role untuk dropdown modal Tambah & Edit User
+        $stmtRole = $pdo->prepare("SELECT id_role, nama_role FROM v_role ORDER BY id_role ASC");
+        $stmtRole->execute();
+        $roleList = $stmtRole->fetchAll(PDO::FETCH_OBJ);
+
+        return view('master.user', compact('user', 'roleList'));
     }
 
     public function storeUser(Request $request)
@@ -455,6 +468,7 @@ class MasterController extends Controller
         ));
     }
 
+
     /* =========================================================================
      * 8. DASHBOARD (Katalog Barang Aktif + Stok Real-Time)
      * ========================================================================= */
@@ -480,8 +494,9 @@ class MasterController extends Controller
         return view('dashboard', compact('katalog'));
     }
 
+
     /* =========================================================================
-     * 9. KARTU STOK (Baca Langsung dari Tabel kartu_stok yang Sudah Ada)
+     * 9. KARTU STOK (Baca Langsung dari Tabel kartu_stok)
      * ========================================================================= */
     public function kartuStok(Request $request)
     {

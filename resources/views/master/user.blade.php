@@ -87,6 +87,9 @@
                 </div>
             </form>
         </div>
+        <a href="/">
+        <button class='button-penjualan' type="button">Dashboard</button>
+        </a>
     </div>
 
     <!-- Modal Edit -->
@@ -108,7 +111,8 @@
 
                     <label>Role</label>
                     <select name="id_role" id="edit_id_role" required>
-                        @foreach($roleList ?? [] as $r)
+                        <option value="">-- Pilih Role --</option>
+                        @foreach($roleList as $r)
                             <option value="{{ $r->id_role }}">{{ $r->nama_role }}</option>
                         @endforeach
                     </select>

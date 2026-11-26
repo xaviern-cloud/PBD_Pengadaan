@@ -12,6 +12,7 @@ return new class extends Migration
             CREATE OR REPLACE VIEW v_barang AS
             SELECT
                 b.id_barang,
+                b.jenis_barang AS kode_jenis,
                 CASE
                     WHEN b.jenis_barang = 'BB'  THEN 'Bahan Baku'
                     WHEN b.jenis_barang = 'BSJ' THEN 'Barang Setengah Jadi'
@@ -21,6 +22,7 @@ return new class extends Migration
                     ELSE 'Belum dikategorikan'
                 END AS jenis_barang,
                 b.nama_barang,
+                b.id_satuan,
                 s.nama_satuan,
                 b.harga,
                 CASE
@@ -50,6 +52,7 @@ return new class extends Migration
             SELECT
                 id_vendor,
                 nama_vendor,
+                badan_hukum AS kode_badan_hukum,
                 CASE
                     WHEN badan_hukum = 'P' OR badan_hukum = 'PT' THEN 'Perseroan Terbatas (PT)'
                     WHEN badan_hukum = 'C' OR badan_hukum = 'CV' THEN 'Commanditaire Vennootschap (CV)'
@@ -72,6 +75,7 @@ return new class extends Migration
             SELECT
                 u.id_user,
                 u.username,
+                u.id_role,
                 r.nama_role
             FROM user u
             LEFT JOIN role r ON u.id_role = r.id_role
@@ -101,38 +105,10 @@ return new class extends Migration
             FROM margin_penjualan m
             LEFT JOIN user u ON m.id_user = u.id_user
         ");
-
-        // 7. View Kartu Stok
-        DB::statement("
-            CREATE OR REPLACE VIEW vw_kartu_stok AS
-            SELECT
-                ks.id_kartu_stok,
-                ks.update_terakhir AS tanggal,
-                b.id_barang,
-                b.nama_barang,
-                s.nama_satuan,
-                CASE
-                    WHEN ks.jenis_transaksi = 'M' THEN 'Penerimaan (Masuk)'
-                    WHEN ks.jenis_transaksi = 'K' THEN 'Penjualan (Keluar)'
-                    WHEN ks.jenis_transaksi = 'R' THEN 'Retur Vendor (Keluar)'
-                    ELSE 'Lainnya'
-                END AS jenis_transaksi,
-                ks.masuk,
-                ks.keluar,
-                ks.stock AS stok_akhir,
-                ks.id_transaksi AS ref_id_transaksi
-            FROM kartu_stok ks
-            JOIN barang b ON ks.id_barang = b.id_barang
-            LEFT JOIN satuan s ON b.id_satuan = s.id_satuan
-            ORDER BY ks.update_terakhir DESC, ks.id_kartu_stok DESC
-        ");
-
-
     }
 
     public function down(): void
     {
-        DB::statement("DROP VIEW IF EXISTS vw_kartu_stok");
         DB::statement("DROP VIEW IF EXISTS v_barang");
         DB::statement("DROP VIEW IF EXISTS v_satuan");
         DB::statement("DROP VIEW IF EXISTS v_vendor");

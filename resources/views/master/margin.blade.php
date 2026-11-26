@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container-main">
-        <h1>Master Margin Penju<!DOCTYPE html>alan (v_margin_penjualan)</h1>
+        <h1>Master Margin Penjualan (v_margin_penjualan)</h1>
 
         @if(session('success'))
             <div class="alert-success">{{ session('success') }}</div>
@@ -22,7 +22,7 @@
                     <tr>
                         <th>ID MARGIN</th>
                         <th>PERSEN (%)</th>
-                        <th>DIBUAT OLEH</th>
+                        <th>DIBUAT / DIUBAH OLEH</th>
                         <th>
                             STATUS
                             <form method="GET" action="{{ route('master.margin') }}" style="display: inline-block; margin-left: 8px;">
@@ -50,16 +50,14 @@
                         <td>
                             <div style="display: flex; gap: 8px; justify-content: center;">
                                 <button type="button" class="button-edit"
-                                        onclick="editMargin({{ $m->id_margin_penjualan }}, '{{ $m->persen }}', '{{ $m->id_user ?? '' }}', '{{ $m->status ?? '' }}')">
+                                        onclick="editMargin({{ $m->id_margin_penjualan }}, '{{ $m->persen }}', '{{ $m->status ?? '' }}')">
                                     Edit
                                 </button>
-                                @if(str_contains(strtolower(session('role', '')), 'admin'))
-                                    <form action="{{ route('master.margin.destroy', $m->id_margin_penjualan) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="button-hapus">Hapus</button>
-                                    </form>
-                                @endif
+                                <form action="{{ route('master.margin.destroy', $m->id_margin_penjualan) }}" method="POST" style="display: inline;" onsubmit="return confirmDelete('{{ $m->persen }}')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="button-hapus">Hapus</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -71,6 +69,9 @@
                 </tbody>
             </table>
         </div>
+        <a href="/">
+        <button class='button-penjualan' type="button">Dashboard</button>
+        </a>
     </div>
 
     <!-- Modal Tambah -->
@@ -85,13 +86,6 @@
                 <div class="modal-body">
                     <label>Persentase Margin (%)</label>
                     <input type="number" step="0.01" name="persen" required placeholder="Contoh: 10.00">
-
-                    <label>Dibuat Oleh (User)</label>
-                    <select name="id_user" required>
-                        @foreach($userList ?? [] as $u)
-                            <option value="{{ $u->id_user }}">{{ $u->username }}</option>
-                        @endforeach
-                    </select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="button-hapus" onclick="closeModal('modalTambahMargin')">Batal</button>
@@ -114,13 +108,6 @@
                 <div class="modal-body">
                     <label>Persentase Margin (%)</label>
                     <input type="number" step="0.01" name="persen" id="edit_persen" required>
-
-                    <label>Dibuat Oleh (User)</label>
-                    <select name="id_user" id="edit_id_user" required>
-                        @foreach($userList ?? [] as $u)
-                            <option value="{{ $u->id_user }}">{{ $u->username }}</option>
-                        @endforeach
-                    </select>
 
                     <label>Status</label>
                     <select name="status" id="edit_status" required>
